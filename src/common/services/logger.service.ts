@@ -123,7 +123,10 @@ export class LoggerService extends Logger {
         pid,
       };
 
-      super.log(JSON.stringify(logObject, null, 2));
+      const bigIntReplacer = (_key: string, value: unknown) =>
+        typeof value === 'bigint' ? value.toString() : value;
+
+      super.log(JSON.stringify(logObject, bigIntReplacer, 2));
     }
   }
 }

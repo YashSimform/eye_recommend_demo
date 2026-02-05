@@ -5,7 +5,9 @@ import { ScheduleModule } from '@nestjs/schedule';
 import { ThrottlerModule } from '@nestjs/throttler';
 import { AcceptLanguageResolver, I18nModule } from 'nestjs-i18n';
 import { join } from 'path';
-import { PrismaService } from 'src/database/prisma.service';
+import { DatabaseModule } from 'src/database/database.module';
+import { MfaModule } from 'src/modules/mfa/mfa.module';
+import { RoleModule } from 'src/modules/role/role.module';
 import { ENV } from '../common/constants';
 import { HealthService, LoggerService } from '../common/services';
 import { validateEnvVariables } from '../common/utils';
@@ -16,7 +18,11 @@ import { AuthGuard, CustomThrottlerGuard } from '../core/guards';
 import { HttpExceptionsFilter, ResponseInterceptor } from '../core/interceptors';
 import { TraceMiddleware } from '../core/middleware';
 import { AuthModule } from '../modules/auth/auth.module';
+import { ClinicModule } from '../modules/clinic/clinic.module';
+import { EnquiryModule } from '../modules/enquiry/enquiry.module';
 import { JobsModule } from '../modules/jobs/jobs.module';
+import { NotificationModule } from '../modules/notification/notification.module';
+import { SupplierModule } from '../modules/supplier/supplier.module';
 import { UserModule } from '../modules/user/user.module';
 import { AppController } from './app.controller';
 
@@ -47,14 +53,20 @@ import { AppController } from './app.controller';
       ],
     }),
     ScheduleModule.forRoot(),
+    MfaModule,
+    DatabaseModule,
+    RoleModule,
     AuthModule,
     UserModule,
     JobsModule,
+    NotificationModule,
+    EnquiryModule,
+    ClinicModule,
+    SupplierModule,
   ],
   controllers: [AppController],
   providers: [
     HealthService,
-    PrismaService,
     {
       provide: APP_INTERCEPTOR,
       useClass: ResponseInterceptor,

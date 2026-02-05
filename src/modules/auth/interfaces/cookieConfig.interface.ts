@@ -6,6 +6,6 @@ export interface ICookieConfig {
 }
 
 export interface IUserValidationResult {
-  userId: string;
+  userId: bigint;
   name: string;
 }

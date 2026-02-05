@@ -8,6 +8,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { Prisma } from '@prisma/client';
 import * as sentry from '@sentry/node';
 import { Response } from 'express';
 import { I18nContext } from 'nestjs-i18n';
@@ -27,6 +28,41 @@ export class HttpExceptionsFilter implements ExceptionFilter {
     const i18n = I18nContext.current(host);
     const response = ctx.getResponse<Response>();
     const env = this.configService.get<string>('app.env');
+
+    // Handle Prisma known request errors (map to friendly HTTP responses)
+    if (exception instanceof Prisma.PrismaClientKnownRequestError) {
+      this.logger.error(exception);
+      if (env === ENV.PRODUCTION || env === ENV.STAGING) {
+        sentry.captureException(exception);
+      }
+
+      // Unique constraint
+      if (exception.code === 'P2002') {
+        return response.status(HttpStatus.CONFLICT).json({
+          message: this.translateErrorMessage(ERROR_MSG.DB.VALIDATION.UQ_ERROR, i18n),
+          data: null,
+          error: null,
+        });
+      }
+
+      // Foreign key / constraint errors
+      if (exception.code === 'P2003') {
+        return response.status(HttpStatus.BAD_REQUEST).json({
+          message: this.translateErrorMessage(ERROR_MSG.DB.VALIDATION.FK_ERROR, i18n),
+          data: null,
+          error: null,
+        });
+      }
+
+      // Record not found
+      if (exception.code === 'P2025') {
+        return response.status(HttpStatus.NOT_FOUND).json({
+          message: this.translateErrorMessage(ERROR_MSG.SERVER.PAGE_NOT_FOUND, i18n),
+          data: null,
+          error: null,
+        });
+      }
+    }
 
     if (exception instanceof HttpException) {
       if (exception.getStatus() === HttpStatus.INTERNAL_SERVER_ERROR) {

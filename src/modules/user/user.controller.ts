@@ -1,40 +1,27 @@
-import { Body, Controller, Get, Put } from '@nestjs/common';
-import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
-import { SWAGGER_TAGS } from '../../common/constants';
-import { ICurrentUser } from '../../common/interfaces';
-import { CurrentUser } from '../../core/decorators';
-import { GetProfileResponseDto, UpdateProfileDto, UpdateProfileResponseDto } from './dtos';
+
+import { Body, Controller, Post } from '@nestjs/common';
 import { UserService } from './user.service';
+import { SWAGGER_TAGS } from 'src/common/constants';
+import { ApiCreatedResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { CreateUserDto, CreateUserResponseDto } from './dtos';
+import { Public } from 'src/core/decorators';
 
 @Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
-  @ApiTags(SWAGGER_TAGS.USER)
+   @ApiTags(SWAGGER_TAGS.USER)
   @ApiOperation({
-    summary: 'Get profile API',
-    description: 'This API is used to get profile',
+    summary: 'Create new user  API',
+    description: 'This API is used to register a new user',
   })
-  @ApiOkResponse({
-    description: 'Profile fetched successfully',
-    type: GetProfileResponseDto,
+  @ApiCreatedResponse({
+    description: 'User created successfully',
+    type: CreateUserResponseDto,
   })
-  @Get('/profile')
-  getProfile(@CurrentUser() currentUser: ICurrentUser) {
-    return this.userService.getProfile(currentUser.userId);
-  }
-
-  @ApiTags(SWAGGER_TAGS.USER)
-  @ApiOperation({
-    summary: 'Update profile API',
-    description: 'This API is used to update profile',
-  })
-  @ApiOkResponse({
-    description: 'Profile updated successfully',
-    type: UpdateProfileResponseDto,
-  })
-  @Put('/profile')
-  updateProfile(@CurrentUser() currentUser: ICurrentUser, @Body() data: UpdateProfileDto) {
-    return this.userService.updateProfile(currentUser.userId, data);
+  @Public()
+  @Post('/create-user')
+  createUser(@Body() data: CreateUserDto) {
+    return this.userService.createUser(data);
   }
 }

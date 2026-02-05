@@ -22,8 +22,12 @@ export class AuthGuard implements CanActivate {
         return true;
       }
 
-      // Get token from cookies instead of authorization header
-      const token = request.cookies?.access_token;
+      // Get token from Authorization header or cookies
+      const authHeader: string | undefined = request.headers?.authorization;
+      const bearerToken = authHeader?.startsWith('Bearer ')
+        ? authHeader.slice('Bearer '.length)
+        : undefined;
+      const token = bearerToken || request.cookies?.access_token;
 
       if (!token) {
         throw new UnauthorizedException(AUTH_ERROR_MSG.UNAUTHORIZED);

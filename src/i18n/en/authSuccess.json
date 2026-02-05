@@ -4,6 +4,8 @@
     "LOGIN": "Login successful",
     "REFRESH_TOKEN": "Refresh token generated successfully",
     "CHANGE_PASSWORD": "Change password successful",
-    "LOGOUT": "Logout successful"
+    "LOGOUT": "Logout successful",
+    "FORGOT_PASSWORD": "Password reset link sent to your email",
+    "RESET_PASSWORD": "Password reset successfully"
   }
 }

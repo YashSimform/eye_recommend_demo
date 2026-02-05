@@ -1,39 +1,26 @@
 import { Body, Controller, Post, Req, Res } from '@nestjs/common';
-import { ApiCreatedResponse, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { Request, Response } from 'express';
 import { SWAGGER_TAGS } from '../../common/constants';
-import { ICurrentUser } from '../../common/interfaces';
-import { CurrentUser, Public } from '../../core/decorators';
+// import { ICurrentUser } from '../../common/interfaces';
+import { Public } from '../../core/decorators';
 import { AuthService } from './auth.service';
 import {
-  ChangePasswordDto,
-  ChangePasswordResponseDto,
+  // ChangePasswordDto,
+  // ChangePasswordResponseDto,
+  ForgotPasswordDto,
+  ForgotPasswordResponseDto,
   LoginDto,
   LoginResponseDto,
   LogoutResponseDto,
   RefreshTokenResponseDto,
-  SignupDto,
-  SignupResponseDto,
+  ResetPasswordDto,
+  ResetPasswordResponseDto,
 } from './dtos';
 
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
-
-  @ApiTags(SWAGGER_TAGS.AUTH)
-  @ApiOperation({
-    summary: 'Sign up for user API',
-    description: 'This API is used to register a new user',
-  })
-  @ApiCreatedResponse({
-    description: 'User created successfully',
-    type: SignupResponseDto,
-  })
-  @Public()
-  @Post('/signup')
-  signup(@Body() data: SignupDto, @Res({ passthrough: true }) res: Response) {
-    return this.authService.signup(data, res);
-  }
 
   @ApiTags(SWAGGER_TAGS.AUTH)
   @ApiOperation({
@@ -46,8 +33,8 @@ export class AuthController {
   })
   @Public()
   @Post('/login')
-  login(@Body() data: LoginDto, @Res({ passthrough: true }) res: Response) {
-    return this.authService.login(data, res);
+  login(@Body() data: LoginDto) {
+    return this.authService.login(data);
   }
 
   @ApiTags(SWAGGER_TAGS.AUTH)
@@ -82,15 +69,45 @@ export class AuthController {
 
   @ApiTags(SWAGGER_TAGS.AUTH)
   @ApiOperation({
-    summary: 'Change password API',
-    description: 'This API is used to change password',
+    summary: 'Forgot Password API',
+    description: 'This API is used to request a password reset link',
   })
   @ApiOkResponse({
-    description: 'Change password successful',
-    type: ChangePasswordResponseDto,
+    description: 'Password reset link sent to your email',
+    type: ForgotPasswordResponseDto,
   })
-  @Post('/change-password')
-  changePassword(@CurrentUser() currentUser: ICurrentUser, @Body() data: ChangePasswordDto) {
-    return this.authService.changePassword(currentUser.userId, data);
+  @Public()
+  @Post('/forgot-password')
+  forgotPassword(@Body() data: ForgotPasswordDto) {
+    return this.authService.forgotPassword(data);
   }
+
+  @ApiTags(SWAGGER_TAGS.AUTH)
+  @ApiOperation({
+    summary: 'Reset Password API',
+    description: 'This API is used to reset password with token from email',
+  })
+  @ApiOkResponse({
+    description: 'Password reset successful',
+    type: ResetPasswordResponseDto,
+  })
+  @Public()
+  @Post('/reset-password')
+  resetPassword(@Body() data: ResetPasswordDto) {
+    return this.authService.resetPassword(data);
+  }
+
+  // @ApiTags(SWAGGER_TAGS.AUTH)
+  // @ApiOperation({
+  //   summary: 'Change password API',
+  //   description: 'This API is used to change password',
+  // })
+  // @ApiOkResponse({
+  //   description: 'Change password successful',
+  //   type: ChangePasswordResponseDto,
+  // })
+  // @Post('/change-password')
+  // changePassword(@CurrentUser() currentUser: ICurrentUser, @Body() data: ChangePasswordDto) {
+  //   return this.authService.changePassword(currentUser.userId, data);
+  // }
 }

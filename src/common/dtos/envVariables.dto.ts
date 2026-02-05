@@ -30,4 +30,28 @@ export class EnvVariablesDto {
 
   @IsString()
   JWT_REFRESH_SECRET_KEY: string;
+
+  @IsString()
+  @IsNotEmpty()
+  FRONTEND_URL: string;
+
+  @IsOptional()
+  @IsString()
+  AUTH0_DOMAIN: string;
+
+  @IsOptional()
+  @IsString()
+  AUTH0_CLIENT_ID: string;
+
+  @IsOptional()
+  @IsString()
+  AUTH0_CLIENT_SECRET: string;
+
+  @IsOptional()
+  @IsString()
+  AUTH0_AUDIENCE: string;
+
+  @IsOptional()
+  @IsString()
+  AUTH0_CONNECTION: string;
 }

@@ -18,17 +18,17 @@ export class UserRepository {
     });
   }
 
-  findUserById(userId: string, select?: Prisma.UserSelect) {
+  findUserById(userId: bigint, select?: Prisma.UserSelect) {
     return this.prisma.user.findUnique({
-      where: { id: userId },
+      where: { user_id: userId },
       ...(select && { select }),
     });
   }
 
-  updateUserById(id: string, updatePayload: Prisma.UserUpdateInput) {
+  updateUser(userId: bigint, updateData: Prisma.UserUpdateInput) {
     return this.prisma.user.update({
-      where: { id },
-      data: updatePayload,
+      where: { user_id: userId },
+      data: updateData,
     });
   }
 }

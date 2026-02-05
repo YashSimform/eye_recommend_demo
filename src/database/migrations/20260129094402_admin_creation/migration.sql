@@ -1,0 +1,35 @@
+-- -- This is an empty migration.
+
+-- INSERT INTO users (
+--     uuid,
+--     username, 
+--     email, 
+--     password_hash, 
+--     first_name, 
+--     last_name, 
+--     account_type,
+--     user_type,
+--     status,
+--     must_change_password,
+--     updated_at
+-- ) VALUES (
+--     gen_random_uuid(),
+--     'superadmin',
+--     'admin@eyerecommend.com',
+--     '$2a$10$xReT.tTqDvwg8PnM7d8p8.N4cy5IvAonBPPqMOcmvfdXX3hsLy/vu',
+--     'System',
+--     'Administrator',
+--     'internal',
+--     'internal',
+--     'active',
+--     TRUE,
+--     CURRENT_TIMESTAMP
+-- ) ON CONFLICT (email) DO NOTHING;
+
+-- -- Assign SuperAdministrator role
+-- INSERT INTO user_roles (user_id, role_id)
+-- SELECT u.user_id, r.role_id
+-- FROM users u, roles r
+-- WHERE u.username = 'superadmin'
+--   AND r.role_name = 'SuperAdministrator'
+-- ON CONFLICT DO NOTHING;

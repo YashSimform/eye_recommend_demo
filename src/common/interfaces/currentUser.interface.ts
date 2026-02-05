@@ -1,4 +1,4 @@
 export interface ICurrentUser {
-  userId: string;
-  name: string;
+  user_id: bigint;
+  username: string;
 }

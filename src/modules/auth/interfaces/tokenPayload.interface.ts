@@ -1,3 +1,3 @@
 export interface ITokenPayload {
-  userId: string;
+  userId: bigint;
 }

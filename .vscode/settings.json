@@ -26,4 +26,7 @@
     "*.ts",
     "*.js",
   ],
+  "[prisma]": {
+    "editor.defaultFormatter": "Prisma.prisma"
+  },
 }

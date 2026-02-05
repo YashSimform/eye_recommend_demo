@@ -9,19 +9,23 @@ import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import * as SentryNode from '@sentry/node';
-import * as cookieParser from 'cookie-parser';
 import helmet from 'helmet';
 import { AppModule } from './app/app.module';
 import { ENV } from './common/constants';
+import cookieParser = require('cookie-parser');
 
 const configureSwagger = (app: INestApplication): void => {
   const swaggerOptions = new DocumentBuilder()
     .setTitle('Backend Service')
     .setDescription('Backend Service APIs')
+    // Add Bearer auth so you can use the Authorize button in Swagger UI
+    .addBearerAuth({ type: 'http', scheme: 'bearer', bearerFormat: 'JWT' }, 'access-token')
     .setVersion('1.0')
     .build();
 
   const document = SwaggerModule.createDocument(app, swaggerOptions);
+  // Require the bearer auth globally in the docs (shows lock icon on endpoints)
+  document.security = [{ 'access-token': [] }];
 
   SwaggerModule.setup('docs', app, document, {
     customSiteTitle: 'Backend Service',

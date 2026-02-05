@@ -15,6 +15,11 @@ export const SWAGGER_TAGS = {
   AUTH: 'Authentication',
   CHAT: 'Chat',
   USER: 'User',
+  ROLE: 'Role',
+  PERMISSION: 'Permission',
+  NOTIFICATION: 'Notification',
+  JOBS: 'Jobs',
+  MFA: 'MFA',
 };
 
 export const ENV = {
@@ -26,7 +31,13 @@ export const ENV = {
 
 export const DEFAULT_MAX_LENGTH = 250;
 
+export const DEFAULT_MIN_LENGTH = 3;
+
+export const PASSWORD_MIN_LENGTH = 8;
+
 export const DEFAULT_PAGE = 0;
 export const DEFAULT_PAGE_SIZE = 10;
 
 export const SENSITIVE_KEYS = ['password', 'token', 'authorization'];
+
+export const PHONE_REGEX = /^\+?[0-9\s\-().]+$/;
